@@ -14,7 +14,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial' font-weight='700' font-size='26' fill='%23fff'%3EAM%3C/text%3E%3C/svg%3E">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="preload" as="image" href="assets/anurag-cut.webp">
+<link rel="preload" as="image" href="assets/anurag-full.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -90,7 +90,7 @@
   .figure img{width:100%;height:100%;filter:contrast(1.08) brightness(1.02) drop-shadow(0 0 1px rgba(255,255,255,.35)) drop-shadow(0 -6px 30px rgba(255,255,255,.10));
     -webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 99%);mask-image:linear-gradient(to bottom,#000 80%,transparent 99%)}
   .sweep{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;
-    -webkit-mask:url(assets/anurag-cut.webp) 0 0/100% 100% no-repeat;mask:url(assets/anurag-cut.webp) 0 0/100% 100% no-repeat;
+    -webkit-mask:url(assets/anurag-full.webp) 0 0/100% 100% no-repeat;mask:url(assets/anurag-full.webp) 0 0/100% 100% no-repeat;
     background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.95) 50%,transparent 58%) 0 0/300% 100% no-repeat;background-position:110% 0}
   .ready .sweep{animation:sweep 7s cubic-bezier(.6,0,.2,1) 1.4s infinite}
   @keyframes sweep{0%{background-position:110% 0}22%,100%{background-position:-10% 0}}
@@ -101,7 +101,7 @@
   .js .vert,.js .badge{opacity:0}
   .ready .figure img{opacity:1;transform:none;filter:contrast(1.08) brightness(1.02) drop-shadow(0 0 1px rgba(255,255,255,.35)) drop-shadow(0 -6px 30px rgba(255,255,255,.10));transition:opacity 1.2s .45s,transform 1.6s .45s cubic-bezier(.2,.7,.2,1),filter 1.4s .45s}
   .ready .vert,.ready .badge{opacity:1;transition:opacity .8s 1.3s}
-  .badge{position:absolute;left:-96px;top:46%;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+  .badge{position:absolute;left:-70px;top:12%;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
   .badge .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2fb36b;margin-right:8px;box-shadow:0 0 0 4px rgba(47,179,107,.18)}
   .scroll{position:absolute;bottom:26px;left:var(--pad);font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:center}
   .scroll::after{content:"↓";animation:bob 1.8s ease-in-out infinite}
@@ -336,7 +336,7 @@
         <canvas id="sculpt" aria-hidden="true"></canvas>
         <div class="s-meta" aria-hidden="true"><span id="pcount">20,000</span> particles · <span class="s-hint">move your cursor</span></div>
         <div class="figure">
-          <img src="assets/anurag-cut.webp" alt="Portrait of Anurag Mishra in a black suit" width="651" height="868" fetchpriority="high">
+          <img src="assets/anurag-full.webp" alt="Anurag Mishra smiling with arms crossed" width="664" height="886" fetchpriority="high">
           <div class="sweep" aria-hidden="true"></div>
         </div>
         <div class="vert" aria-hidden="true">Software Developer · Lucknow</div>

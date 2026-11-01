@@ -15,35 +15,37 @@ async function init() {
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
   // --- sample the cut-out portrait ---
-  const img = await loadImage('assets/anurag-cut.webp');
-  const W = 156, H = 208;                        // sample grid, same 3:4 shape as the photo
+  const img = await loadImage('assets/anurag-full.webp');
+  const W = 228, H = 304;                        // sample grid, same 3:4 shape as the photo
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.drawImage(img, 0, 0, W, H);
   const px = ctx.getImageData(0, 0, W, H).data;
 
   const target = [], start = [], size = [], dark = [], delay = [];
-  const head = { x: 0.5 * W, y: 0.33 * H, rx: 0.21 * W, ry: 0.27 * H };
+  // Depth comes from the silhouette itself: the further a pixel is from the outline,
+  // the further it bulges toward the viewer, so any pose gets a rounded, "inflated" body.
+  const inside = new Uint8Array(W * H);
+  for (let n = 0; n < W * H; n++) inside[n] = px[n * 4 + 3] >= 140 ? 1 : 0;
+  const depth = distanceToEdge(inside, W, H);
+  // world units stay the same whatever the grid density (figure is always HS = 208 units tall),
+  // so the hover radius, waves and camera framing keep their feel
+  const HS = 208, U = HS / H;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
     const k = (j * W + i) * 4;
-    if (px[k + 3] < 140) continue;
+    if (!inside[j * W + i]) continue;
     const L = px[k] / 255;
-    const d = Math.min(1, Math.max(0, (0.88 - L) / 0.62));   // stretch contrast so eyes, brows and beard pop
+    const d = Math.min(1, Math.max(0, (0.95 - L) / 0.85));   // darker = bigger dot
     const x = i - W / 2 + (Math.random() - .5) * .6;
     const y = H / 2 - j + (Math.random() - .5) * .6;
-    // depth: an ellipsoid for the head plus a curved cylinder for the shoulders
-    // (max of the shapes keeps the surface continuous, so no gap opens at the chin when it turns)
-    const ex = (i - head.x) / head.rx, ey = (j - head.y) / head.ry, e = 1 - ex * ex - ey * ey;
-    const headZ = 24 * Math.sqrt(Math.max(0, e));
-    const neckZ = 17 * Math.sqrt(Math.max(0, 1 - Math.pow((i - W / 2) / (W * 0.17), 2))) * smooth(0.42, 0.56, j / H);
-    const bodyZ = 15 * Math.sqrt(Math.max(0, 1 - Math.pow((i - W / 2) / (W * 0.58), 2))) * smooth(0.5, 0.72, j / H);
-    let z = Math.max(headZ, neckZ, bodyZ);
-    z += (L - 0.5) * 3 + (Math.random() - .5) * 1.2;
-    target.push(x, y, z);
+    // inflated silhouette, with lighter skin (face, crossed forearms) lifted a little further forward
+    let z = 5 * U * Math.sqrt(depth[j * W + i]) / Math.sqrt(U);
+    z += smooth(0.45, 0.75, L) * 5 + (Math.random() - .5) * 1.2;
+    target.push(x * U, y * U, z);
     // start: a wide scattered cloud
     const r = 140 + Math.random() * 120, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
     start.push(r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph) * .7, r * Math.sin(ph) * Math.sin(th));
-    size.push(0.3 + 1.25 * Math.pow(d, 1.35));
+    size.push((0.3 + 1.25 * Math.pow(d, 1.35)) * U);
     dark.push(d);
     delay.push(Math.random() * 0.28 + (j / H) * 0.3);   // top assembles first
   }
@@ -60,7 +62,7 @@ async function init() {
   const uniforms = {
     uTime: { value: 0 }, uProgress: { value: 0 }, uScale: { value: 1 }, uDist: { value: 1 },
     uMouse: { value: new THREE.Vector2(999, 999) }, uHover: { value: 0 },
-    uScan: { value: -999 }, uBottom: { value: -H / 2 },
+    uScan: { value: -999 }, uBottom: { value: -HS / 2 },
   };
 
   const mat = new THREE.ShaderMaterial({
@@ -110,7 +112,7 @@ async function init() {
 
   const fov = 32, camera = new THREE.PerspectiveCamera(fov, 1, 1, 2000);
   // canvas is 124% of the portrait box tall (room for the swirl), so the figure fills ~0.93/1.24 of it
-  const dist = (H / 2) / Math.tan(THREE.MathUtils.degToRad(fov / 2)) / (0.93 / 1.24);
+  const dist = (HS / 2) / Math.tan(THREE.MathUtils.degToRad(fov / 2)) / (0.93 / 1.24);
   camera.position.set(0, -2, dist);
   uniforms.uDist.value = dist;
 
@@ -154,7 +156,7 @@ async function init() {
       uniforms.uProgress.value = Math.min(since / 2.8, 1);
       // a scan wave every 7 s once assembled
       const cyc = (since - 3.2) % 7;
-      uniforms.uScan.value = since > 3.2 && cyc < 2.4 ? H / 2 + 10 - (cyc / 2.4) * (H + 30) : -999;
+      uniforms.uScan.value = since > 3.2 && cyc < 2.4 ? HS / 2 + 10 - (cyc / 2.4) * (HS + 30) : -999;
     }
     uniforms.uHover.value += (hoverTarget - uniforms.uHover.value) * 0.08;
     // slow idle sway plus cursor follow
@@ -170,6 +172,22 @@ async function init() {
     }
     renderer.render(scene, camera);
   });
+}
+
+// Two-pass chamfer distance transform: for each inside cell, roughly how many cells to the edge.
+function distanceToEdge(mask, W, H) {
+  const D = new Float32Array(W * H), INF = 1e6;
+  for (let n = 0; n < W * H; n++) D[n] = mask[n] ? INF : 0;
+  const at = (i, j) => (i < 0 || j < 0 || i >= W || j >= H) ? 0 : D[j * W + i];
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const n = j * W + i; if (!D[n]) continue;
+    D[n] = Math.min(D[n], at(i - 1, j) + 1, at(i, j - 1) + 1, at(i - 1, j - 1) + 1.414, at(i + 1, j - 1) + 1.414);
+  }
+  for (let j = H - 1; j >= 0; j--) for (let i = W - 1; i >= 0; i--) {
+    const n = j * W + i; if (!D[n]) continue;
+    D[n] = Math.min(D[n], at(i + 1, j) + 1, at(i, j + 1) + 1, at(i + 1, j + 1) + 1.414, at(i - 1, j + 1) + 1.414);
+  }
+  return D;
 }
 
 function smooth(a, b, x) { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
