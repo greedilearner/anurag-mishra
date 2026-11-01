@@ -66,17 +66,25 @@
   .hero-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
   /* cinematic portrait */
   .portrait{position:relative;align-self:end;justify-self:end;width:min(100%,470px,calc((100svh - 100px)*.75));aspect-ratio:651/868}
-  .stage{position:absolute;left:7%;right:7%;top:17%;bottom:4%;border-radius:999px 999px 30px 30px;overflow:hidden;
-    background:radial-gradient(120% 70% at 50% 8%,#5a5a57 0%,#2a2a29 32%,#121212 62%,#070707 100%);
-    box-shadow:0 50px 80px -40px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.06);translate:var(--sx,0) var(--sy,0);transition:translate .6s cubic-bezier(.2,.7,.2,1)}
-  .beam{position:absolute;inset:-20%;background:conic-gradient(from 200deg at 50% -10%,transparent 0deg,rgba(255,255,255,.13) 14deg,transparent 30deg,transparent 330deg);animation:beam 9s ease-in-out infinite alternate;mix-blend-mode:screen}
-  @keyframes beam{from{transform:rotate(-9deg)}to{transform:rotate(9deg)}}
+  /* 3D particle sculpture */
+  #sculpt{position:absolute;top:-12%;left:-30%;width:160%;height:124%;display:none;cursor:crosshair;touch-action:pan-y}
+  .has-3d #sculpt{display:block}
+  .has-3d .figure{display:none}
+  .orbit{position:absolute;left:50%;top:30%;width:92%;aspect-ratio:1;translate:-50% -50%;pointer-events:none}
+  .orbit i{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(17,17,17,.10)}
+  .orbit i:nth-child(2){inset:12%;border-style:dashed;border-color:rgba(17,17,17,.12);animation:spin 60s linear infinite}
+  .orbit i:nth-child(3){inset:-14%;border-color:rgba(17,17,17,.06)}
+  .orbit i:nth-child(1)::after{content:"";position:absolute;top:50%;left:-4px;width:7px;height:7px;border-radius:50%;background:var(--ink);animation:none}
+  .orbit i:nth-child(1){animation:spin 24s linear infinite}
+  .js .orbit{opacity:0;scale:.85}
+  .ready .orbit{opacity:1;scale:1;transition:opacity 1.4s .3s,scale 1.8s .3s cubic-bezier(.2,.7,.2,1)}
+  .s-meta{position:absolute;left:0;bottom:-3%;font:11px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:none}
+  .has-3d .s-meta{display:block}
+  @media (pointer:coarse){.s-hint{display:none}}
   .grain{position:absolute;inset:-50%;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     animation:grain .9s steps(5) infinite}
   @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-6%,4%)}40%{transform:translate(5%,-7%)}60%{transform:translate(-3%,8%)}80%{transform:translate(7%,2%)}100%{transform:translate(0,0)}}
-  .ring{position:absolute;left:50%;top:9%;width:58%;aspect-ratio:1;translate:-50% 0;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
-  .ring::after{content:"";position:absolute;inset:14%;border-radius:50%;border:1px dashed rgba(255,255,255,.08);animation:spin 40s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .figure{position:absolute;inset:0;translate:var(--fx,0) var(--fy,0);transition:translate .6s cubic-bezier(.2,.7,.2,1)}
   .figure img{width:100%;height:100%;filter:contrast(1.08) brightness(1.02) drop-shadow(0 0 1px rgba(255,255,255,.35)) drop-shadow(0 -6px 30px rgba(255,255,255,.10));
@@ -89,13 +97,11 @@
   .vert{position:absolute;right:-34px;top:24%;writing-mode:vertical-rl;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-3)}
   .vert::before{content:"";display:inline-block;width:1px;height:40px;background:var(--ink-3);margin-bottom:12px;vertical-align:middle}
   /* intro, played after the loader */
-  .js .stage{clip-path:inset(100% 0 0 0 round 999px 999px 30px 30px)}
   .js .figure img{opacity:0;transform:translateY(46px) scale(1.05);filter:blur(14px)}
   .js .vert,.js .badge{opacity:0}
-  .ready .stage{clip-path:inset(0 0 0 0 round 999px 999px 30px 30px);transition:clip-path 1.3s cubic-bezier(.7,0,.2,1),translate .6s cubic-bezier(.2,.7,.2,1)}
   .ready .figure img{opacity:1;transform:none;filter:contrast(1.08) brightness(1.02) drop-shadow(0 0 1px rgba(255,255,255,.35)) drop-shadow(0 -6px 30px rgba(255,255,255,.10));transition:opacity 1.2s .45s,transform 1.6s .45s cubic-bezier(.2,.7,.2,1),filter 1.4s .45s}
   .ready .vert,.ready .badge{opacity:1;transition:opacity .8s 1.3s}
-  .badge{position:absolute;left:-28px;top:30%;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+  .badge{position:absolute;left:-96px;top:46%;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
   .badge .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2fb36b;margin-right:8px;box-shadow:0 0 0 4px rgba(47,179,107,.18)}
   .scroll{position:absolute;bottom:26px;left:var(--pad);font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:center}
   .scroll::after{content:"↓";animation:bob 1.8s ease-in-out infinite}
@@ -255,7 +261,7 @@
     .hero{align-items:flex-start;min-height:auto}
     .portrait{justify-self:center;width:min(84vw,calc(50svh*.75),400px);order:-1;margin-top:16px}
     .badge{left:50%;transform:translateX(-50%);top:auto;bottom:2%;white-space:nowrap}
-    .vert{display:none}
+    .vert,.has-3d .s-meta{display:none}
     .ghost{top:30%}
     .about-grid,.proj{grid-template-columns:1fr}
     .about-photo{max-width:420px}
@@ -326,7 +332,9 @@
         </div>
       </div>
       <div class="portrait" id="portrait">
-        <div class="stage" aria-hidden="true"><div class="beam"></div><span class="ring"></span><div class="grain"></div></div>
+        <div class="orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+        <canvas id="sculpt" aria-hidden="true"></canvas>
+        <div class="s-meta" aria-hidden="true"><span id="pcount">20,000</span> particles · <span class="s-hint">move your cursor</span></div>
         <div class="figure">
           <img src="assets/anurag-cut.webp" alt="Portrait of Anurag Mishra in a black suit" width="651" height="868" fetchpriority="high">
           <div class="sweep" aria-hidden="true"></div>
@@ -554,7 +562,10 @@ WHERE id = <span class="bad">'1' OR '1'='1'</span>
   // then five panels lift away and the hero intro plays underneath.
   const loader = document.getElementById('loader');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const reveal = () => { document.body.classList.remove('loading'); document.documentElement.classList.add('ready'); startReveals(); };
+  const reveal = () => {
+    document.body.classList.remove('loading'); document.documentElement.classList.add('ready'); startReveals();
+    document.dispatchEvent(new Event('site:ready'));   // the 3D sculpture starts assembling on this
+  };
 
   if (reduce) { loader.remove(); reveal(); }
   else {
@@ -596,5 +607,6 @@ WHERE id = <span class="bad">'1' OR '1'='1'</span>
 
   document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
+<script type="module" src="sculpt.js"></script>
 </body>
 </html>
