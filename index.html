@@ -13,6 +13,8 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial' font-weight='700' font-size='26' fill='%23fff'%3EAM%3C/text%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preload" as="image" href="assets/anurag-cut.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -57,14 +59,43 @@
   .stats{display:flex;gap:44px;margin-bottom:clamp(24px,4vh,56px)}
   .stat b{display:block;font-family:var(--display);font-weight:300;font-size:clamp(30px,3.4vw,44px);line-height:1;letter-spacing:-.03em}
   .stat b sup{font-size:.5em;vertical-align:top;margin-right:2px;color:var(--ink-3)}
-  .stat span{font-size:12px;color:var(--ink-3);letter-spacing:.04em}
+  .stat span{display:block;margin-top:6px;font-size:12px;line-height:1.4;color:var(--ink-3);letter-spacing:.04em}
   h1{font-family:var(--display);font-weight:200;font-size:clamp(96px,min(17vw,26svh),230px);line-height:.82;letter-spacing:-.065em;margin-left:-.06em}
   .tag{margin-top:26px;font-size:clamp(16px,1.6vw,19px);color:var(--ink-2);max-width:440px}
   .tag strong{color:var(--ink);font-weight:500}
   .hero-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
-  .portrait{position:relative;align-self:end;justify-self:end;width:min(100%,470px)}
-  .portrait img{width:100%;max-height:calc(100svh - 110px);object-fit:contain;object-position:bottom;mix-blend-mode:multiply;filter:contrast(1.04);-webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);mask-image:linear-gradient(to bottom,#000 78%,transparent)}
-  .badge{position:absolute;left:-28px;top:22%;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+  /* cinematic portrait */
+  .portrait{position:relative;align-self:end;justify-self:end;width:min(100%,470px,calc((100svh - 100px)*.75));aspect-ratio:651/868}
+  .stage{position:absolute;left:7%;right:7%;top:17%;bottom:4%;border-radius:999px 999px 30px 30px;overflow:hidden;
+    background:radial-gradient(120% 70% at 50% 8%,#5a5a57 0%,#2a2a29 32%,#121212 62%,#070707 100%);
+    box-shadow:0 50px 80px -40px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.06);translate:var(--sx,0) var(--sy,0);transition:translate .6s cubic-bezier(.2,.7,.2,1)}
+  .beam{position:absolute;inset:-20%;background:conic-gradient(from 200deg at 50% -10%,transparent 0deg,rgba(255,255,255,.13) 14deg,transparent 30deg,transparent 330deg);animation:beam 9s ease-in-out infinite alternate;mix-blend-mode:screen}
+  @keyframes beam{from{transform:rotate(-9deg)}to{transform:rotate(9deg)}}
+  .grain{position:absolute;inset:-50%;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain .9s steps(5) infinite}
+  @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-6%,4%)}40%{transform:translate(5%,-7%)}60%{transform:translate(-3%,8%)}80%{transform:translate(7%,2%)}100%{transform:translate(0,0)}}
+  .ring{position:absolute;left:50%;top:9%;width:58%;aspect-ratio:1;translate:-50% 0;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
+  .ring::after{content:"";position:absolute;inset:14%;border-radius:50%;border:1px dashed rgba(255,255,255,.08);animation:spin 40s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .figure{position:absolute;inset:0;translate:var(--fx,0) var(--fy,0);transition:translate .6s cubic-bezier(.2,.7,.2,1)}
+  .figure img{width:100%;height:100%;filter:contrast(1.08) brightness(1.02) drop-shadow(0 0 1px rgba(255,255,255,.35)) drop-shadow(0 -6px 30px rgba(255,255,255,.10));
+    -webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 99%);mask-image:linear-gradient(to bottom,#000 80%,transparent 99%)}
+  .sweep{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;
+    -webkit-mask:url(assets/anurag-cut.webp) 0 0/100% 100% no-repeat;mask:url(assets/anurag-cut.webp) 0 0/100% 100% no-repeat;
+    background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.95) 50%,transparent 58%) 0 0/300% 100% no-repeat;background-position:110% 0}
+  .ready .sweep{animation:sweep 7s cubic-bezier(.6,0,.2,1) 1.4s infinite}
+  @keyframes sweep{0%{background-position:110% 0}22%,100%{background-position:-10% 0}}
+  .vert{position:absolute;right:-34px;top:24%;writing-mode:vertical-rl;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-3)}
+  .vert::before{content:"";display:inline-block;width:1px;height:40px;background:var(--ink-3);margin-bottom:12px;vertical-align:middle}
+  /* intro, played after the loader */
+  .js .stage{clip-path:inset(100% 0 0 0 round 999px 999px 30px 30px)}
+  .js .figure img{opacity:0;transform:translateY(46px) scale(1.05);filter:blur(14px)}
+  .js .vert,.js .badge{opacity:0}
+  .ready .stage{clip-path:inset(0 0 0 0 round 999px 999px 30px 30px);transition:clip-path 1.3s cubic-bezier(.7,0,.2,1),translate .6s cubic-bezier(.2,.7,.2,1)}
+  .ready .figure img{opacity:1;transform:none;filter:contrast(1.08) brightness(1.02) drop-shadow(0 0 1px rgba(255,255,255,.35)) drop-shadow(0 -6px 30px rgba(255,255,255,.10));transition:opacity 1.2s .45s,transform 1.6s .45s cubic-bezier(.2,.7,.2,1),filter 1.4s .45s}
+  .ready .vert,.ready .badge{opacity:1;transition:opacity .8s 1.3s}
+  .badge{position:absolute;left:-28px;top:30%;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
   .badge .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2fb36b;margin-right:8px;box-shadow:0 0 0 4px rgba(47,179,107,.18)}
   .scroll{position:absolute;bottom:26px;left:var(--pad);font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:center}
   .scroll::after{content:"↓";animation:bob 1.8s ease-in-out infinite}
@@ -90,8 +121,11 @@
   /* about */
   .about{background:var(--paper)}
   .about-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,6vw,90px);align-items:start}
-  .about-photo{border-radius:24px;overflow:hidden;background:#e7e7e4;aspect-ratio:4/5}
-  .about-photo img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply}
+  .about-photo{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/5;background:radial-gradient(90% 60% at 30% 10%,#5a5a57 0%,#222 40%,#0a0a0a 100%)}
+  .about-photo img{position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 20%;transform:scale(1.15);transform-origin:50% 0;transition:transform 1.6s cubic-bezier(.2,.7,.2,1);filter:contrast(1.1) drop-shadow(0 0 1px rgba(255,255,255,.3))}
+  .about-photo:hover img{transform:scale(1.2)}
+  .about-photo .grain{z-index:1}
+  .about-photo .cap{position:absolute;left:20px;top:18px;z-index:2;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.7)}
   .lead{font-family:var(--display);font-weight:300;font-size:clamp(24px,2.8vw,36px);line-height:1.25;letter-spacing:-.025em}
   .lead span{color:var(--ink-3)}
   .about-body{margin-top:28px;color:var(--ink-2);max-width:620px}
@@ -166,11 +200,49 @@
   .contact .btn.light{color:#fff}
   .contact .btn.light:hover{background:#fff;color:#111}
 
+  .hello{overflow:hidden;padding-top:.1em;margin-top:-.1em}
+  .hello i{display:inline-block;font-style:normal}
+  .js .hello i{transform:translateY(105%) rotate(6deg)}
+  .ready .hello i{transform:none;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+  .ready .hello i:nth-child(1){transition-delay:.25s}.ready .hello i:nth-child(2){transition-delay:.32s}.ready .hello i:nth-child(3){transition-delay:.39s}.ready .hello i:nth-child(4){transition-delay:.46s}.ready .hello i:nth-child(5){transition-delay:.53s}
+  .js .ghost{opacity:0;letter-spacing:.1em}
+  .ready .ghost{opacity:1;letter-spacing:-.04em;transition:opacity 2s .3s,letter-spacing 2.4s .2s cubic-bezier(.2,.7,.2,1)}
+
+  /* loader */
+  #loader{position:fixed;inset:0;z-index:100;color:#f2f2ef;font-family:var(--body);pointer-events:none}
+  html:not(.js) #loader{display:none}
+  .l-cols{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);background:#0d0d0d}
+  #loader.out .l-cols{background:transparent}
+  .l-cols i{background:#0d0d0d;box-shadow:1px 0 0 #0d0d0d,-1px 0 0 #0d0d0d;transition:transform 1s cubic-bezier(.76,0,.24,1)}
+  .l-ui{position:absolute;inset:0;padding:28px var(--pad);transition:opacity .5s,transform .7s cubic-bezier(.7,0,.3,1)}
+  .l-top{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#8a8a86}
+  .l-center{position:absolute;left:var(--pad);right:var(--pad);top:50%;transform:translateY(-50%)}
+  .l-name{font-family:var(--display);font-weight:200;font-size:clamp(46px,11vw,170px);line-height:.9;letter-spacing:-.05em;overflow:hidden;padding:.08em 0 .16em;white-space:nowrap}
+  .l-name i{display:inline-block;font-style:normal;transform:translateY(110%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards}
+  .l-name i.sp{width:.25em}
+  @keyframes rise{to{transform:none}}
+  .l-roles{height:1.6em;overflow:hidden;margin-top:18px;font-size:clamp(14px,1.4vw,18px);color:#a5a5a0}
+  .l-roll{animation:roll 2.4s cubic-bezier(.7,0,.3,1) .6s forwards}
+  .l-roll span{display:block;height:1.6em}
+  @keyframes roll{0%,22%{transform:translateY(0)}33%,55%{transform:translateY(-1.6em)}66%,100%{transform:translateY(-3.2em)}}
+  .l-bar{position:absolute;left:var(--pad);right:var(--pad);bottom:110px;height:1px;background:#262626}
+  .l-bar i{position:absolute;inset:0;background:#f2f2ef;transform-origin:left;transform:scaleX(var(--p,0))}
+  .l-count{position:absolute;right:var(--pad);bottom:22px;font-family:var(--display);font-weight:200;font-size:clamp(56px,9vw,120px);line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+  .l-count small{font-size:.3em;vertical-align:top;color:#8a8a86;margin-left:4px}
+  .l-hint{position:absolute;left:var(--pad);bottom:34px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#6f6f6b}
+  #loader.out .l-ui{opacity:0;transform:translateY(-60px)}
+  #loader.out .l-cols i{transform:translateY(-101%)}
+  #loader.out .l-cols i:nth-child(2){transition-delay:.06s}#loader.out .l-cols i:nth-child(3){transition-delay:.12s}#loader.out .l-cols i:nth-child(4){transition-delay:.18s}#loader.out .l-cols i:nth-child(5){transition-delay:.24s}
+  #loader.out .l-cols{transition-delay:.25s}
+  body.loading{overflow:hidden}
+
   /* reveal */
-  .rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .js .rv{opacity:0;transform:translateY(28px)}
+  .rv{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
   .rv.in{opacity:1;transform:none}
   .hero .rv{transition-duration:1.2s}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .rv,.js .hello i,.js .figure img,.js .vert,.js .badge,.js .ghost{opacity:1;transform:none;filter:none}.js .stage{clip-path:none}#loader{display:none}html{scroll-behavior:auto}}
 
   /* responsive */
   @media (max-width:980px){
@@ -181,9 +253,9 @@
     .links.open a::after{display:none}
     .hero .wrap{grid-template-columns:1fr}
     .hero{align-items:flex-start;min-height:auto}
-    .portrait{justify-self:center;width:auto;order:-1;margin-top:16px}
-    .portrait img{max-height:44svh;width:auto;margin:0 auto}
-    .badge{left:50%;transform:translateX(-50%);top:auto;bottom:6%;white-space:nowrap}
+    .portrait{justify-self:center;width:min(84vw,calc(50svh*.75),400px);order:-1;margin-top:16px}
+    .badge{left:50%;transform:translateX(-50%);top:auto;bottom:2%;white-space:nowrap}
+    .vert{display:none}
     .ghost{top:30%}
     .about-grid,.proj{grid-template-columns:1fr}
     .about-photo{max-width:420px}
@@ -205,7 +277,21 @@
   }
 </style>
 </head>
-<body>
+<body class="loading">
+
+<div id="loader" aria-hidden="true">
+  <div class="l-cols"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="l-ui">
+    <div class="l-top"><span>Portfolio</span><span>©2026</span></div>
+    <div class="l-center">
+      <div class="l-name" id="lname">Anurag Mishra</div>
+      <div class="l-roles"><div class="l-roll"><span>Software Developer</span><span>Full-stack Builder</span><span>ML &amp; Security</span></div></div>
+    </div>
+    <div class="l-bar"><i id="lbar"></i></div>
+    <div class="l-hint">Loading experience</div>
+    <div class="l-count"><span id="lcount">000</span><small>%</small></div>
+  </div>
+</div>
 
 <header id="top">
   <nav class="wrap">
@@ -232,15 +318,20 @@
           <div class="stat"><b>99.56<sup>%</sup></b><span>ML model accuracy</span></div>
           <div class="stat"><b>7</b><span>Languages coded in</span></div>
         </div>
-        <h1 class="rv">Hello</h1>
+        <h1 class="hello" aria-label="Hello"><i>H</i><i>e</i><i>l</i><i>l</i><i>o</i></h1>
         <p class="tag rv">— I'm <strong>Anurag Mishra</strong>, a software developer building real-time web apps and machine-learning tools that keep data safe.</p>
         <div class="hero-cta rv">
           <a href="#work" class="btn dark">See my work →</a>
           <a href="assets/Anurag_Mishra_Resume.pdf" class="btn light" download>Download résumé</a>
         </div>
       </div>
-      <div class="portrait rv">
-        <img src="assets/anurag.jpg" alt="Portrait of Anurag Mishra in a black suit" width="651" height="868" fetchpriority="high">
+      <div class="portrait" id="portrait">
+        <div class="stage" aria-hidden="true"><div class="beam"></div><span class="ring"></span><div class="grain"></div></div>
+        <div class="figure">
+          <img src="assets/anurag-cut.webp" alt="Portrait of Anurag Mishra in a black suit" width="651" height="868" fetchpriority="high">
+          <div class="sweep" aria-hidden="true"></div>
+        </div>
+        <div class="vert" aria-hidden="true">Software Developer · Lucknow</div>
         <div class="badge"><span class="dot"></span>Open to internships &amp; roles</div>
       </div>
     </div>
@@ -264,7 +355,7 @@
 
   <section class="about" id="about">
     <div class="wrap about-grid">
-      <div class="about-photo rv"><img src="assets/anurag.jpg" alt="" loading="lazy"></div>
+      <div class="about-photo rv"><img src="assets/anurag-cut.webp" alt="" loading="lazy"><div class="grain" aria-hidden="true"></div><span class="cap">Anurag Mishra — Lucknow</span></div>
       <div>
         <div class="eyebrow rv">About me</div>
         <p class="lead rv" style="margin-top:18px">I'm a Computer Science student at Galgotias College who likes turning ideas into <span>working, deployed software</span> — fast, clean and easy to maintain.</p>
@@ -457,7 +548,51 @@ WHERE id = <span class="bad">'1' OR '1'='1'</span>
       io.unobserve(e.target);
     });
   }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
-  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  const startReveals = () => document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+  // Loader: letters rise, counter runs 0→100 (never finishing before the page has loaded),
+  // then five panels lift away and the hero intro plays underneath.
+  const loader = document.getElementById('loader');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reveal = () => { document.body.classList.remove('loading'); document.documentElement.classList.add('ready'); startReveals(); };
+
+  if (reduce) { loader.remove(); reveal(); }
+  else {
+    const name = document.getElementById('lname');
+    name.innerHTML = [...name.textContent].map((ch, i) =>
+      ch === ' ' ? '<i class="sp"> </i>' : `<i style="animation-delay:${0.15 + i * 0.045}s">${ch}</i>`).join('');
+    const count = document.getElementById('lcount'), bar = document.getElementById('lbar');
+    let loaded = document.readyState === 'complete';
+    addEventListener('load', () => loaded = true);
+    const MIN = 2300, t0 = performance.now();
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    (function tick(now) {
+      let t = Math.min((now - t0) / MIN, 1);
+      if (!loaded) t = Math.min(t, 0.9);            // hold at 90% until assets are in
+      const p = ease(t);
+      count.textContent = String(Math.round(p * 100)).padStart(3, '0');
+      bar.style.setProperty('--p', p);
+      if (t < 1 || !loaded) return requestAnimationFrame(tick);
+      setTimeout(() => {
+        loader.classList.add('out');
+        setTimeout(reveal, 550);                     // hero starts while the panels are still lifting
+        setTimeout(() => loader.remove(), 1700);
+      }, 250);
+    })(t0);
+    setTimeout(() => { loaded = true; }, 6000);      // never trap the visitor on a slow network
+  }
+
+  // Mouse parallax: the stage drifts one way, the figure the other, for depth.
+  const hero = document.querySelector('.hero'), portrait = document.getElementById('portrait');
+  if (!reduce && matchMedia('(pointer:fine)').matches) {
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      portrait.style.setProperty('--sx', (-x * 14) + 'px'); portrait.style.setProperty('--sy', (-y * 10) + 'px');
+      portrait.style.setProperty('--fx', (x * 18) + 'px');  portrait.style.setProperty('--fy', (y * 8) + 'px');
+    });
+    hero.addEventListener('pointerleave', () => ['--sx','--sy','--fx','--fy'].forEach(k => portrait.style.setProperty(k, '0px')));
+  }
 
   document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
